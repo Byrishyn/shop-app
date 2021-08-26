@@ -5,6 +5,7 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import ProductOverviewScreen from './screens/shop/ProductOverviewScreen';
 import productsReducer from "./store/reducers/product"
+import ShopNavigator from './navigation/ShopNavigator';
 
 const rootReducer = combineReducers({
   products: productsReducer
@@ -16,7 +17,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ProductOverviewScreen />
+      <ShopNavigator />
     </Provider>
   );
 }
