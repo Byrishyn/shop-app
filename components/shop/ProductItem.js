@@ -48,10 +48,12 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     title: {
+        fontFamily: "open-sans-bold",
         fontSize: 18,
         marginVertical: 4
     },
     price: {
+        fontFamily: "open-sans",
         fontSize: 14,
         color: "#888"
 
@@ -60,12 +62,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        height: "25%",
+        height: "20%",
         paddingHorizontal: 20
     },
     details: {
         alignItems: "center",
-        height: "15%",
+        height: "20%",
         padding: 10,
     }
 })
