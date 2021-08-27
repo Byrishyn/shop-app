@@ -1,22 +1,25 @@
 import React from "react"
-import { StyleSheet, View, Text, Button, Image } from "react-native"
+import { StyleSheet, View, Text, Button, Image, TouchableOpacity, TouchableNativeFeedback, Platform } from "react-native"
 import Colors from "../../constants/Colors"
 
 const ProductItem = props => {
+    const TouchableComponent = (Platform.OS === "android" && Platform.Version >=21) ? TouchableNativeFeedback : TouchableOpacity;
     return (
-        <View style={styles.product}>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={{ uri: props.image }} />
+        <TouchableComponent onPress={props.onViewDetail} useForeground>
+            <View style={styles.product}>
+                <View style={styles.imageContainer}>
+                    <Image style={styles.image} source={{ uri: props.image }} />
+                </View>
+                <View style={styles.details}>
+                    <Text style={styles.title}>{props.title}</Text>
+                    <Text style={styles.price}>${props.price.toFixed(2)}</Text>
+                </View>
+                <View style={styles.actions}>
+                    <Button title="Details" onPress={props.onViewDetail} color={Colors.primary} />
+                    <Button title="Add to cart" onPress={props.onAddToCart} color={Colors.primary} />
+                </View>
             </View>
-            <View style={styles.details}>
-                <Text style={styles.title}>{props.title}</Text>
-                <Text style={styles.price}>${props.price.toFixed(2)}</Text>
-            </View>
-            <View style={styles.actions}>
-                <Button title="Details" onPress={props.onViewDetail} color={Colors.primary} />
-                <Button title="Add to cart" onPress={props.onAddToCart} color={Colors.primary} />
-            </View>
-        </View>
+        </TouchableComponent>
     )
 }
 
@@ -33,7 +36,7 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "#FFF"
     },
-    imageContainer:{
+    imageContainer: {
         width: "100%",
         height: "60%",
         borderTopLeftRadius: 10,
