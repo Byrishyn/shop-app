@@ -1,17 +1,23 @@
 import React from "react"
 import { StyleSheet, FlatList, View, Text } from "react-native"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import ProductItem from "../../components/shop/ProductItem"
+import * as cartActions from "../../store/actions/cart"
+
 
 const ProductOverviewScreen = props => {
     const products = useSelector(state => state.products.availableProducts)
+    const dispatch = useDispatch();
+
     const renderShopItem = itemData => {
         return (
             <ProductItem
                 title={itemData.item.title}
                 image={itemData.item.imageUrl}
                 price={itemData.item.price}
-                onAddToCart={() => { }}
+                onAddToCart={() => { 
+                    dispatch(cartActions.addToCart(itemData.item))
+                }}
                 onViewDetail={() => {
                     props.navigation.navigate({
                         routeName: "productDetail",
