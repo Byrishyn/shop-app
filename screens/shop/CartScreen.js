@@ -26,7 +26,7 @@ const CartScreen = props => {
         <View style={styles.screen}>
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>Total : <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text></Text>
-                <Button title="Order now !" onPress={() => useDispatch(ordersActions.addOrder(cartItems, cartTotalAmount))} color={Colors.accent} disabled={cartItems.length === 0} />
+                <Button title="Order now !" onPress={() => dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))} color={Colors.accent} disabled={cartItems.length === 0} />
             </View>
             <FlatList
                 data={cartItems}
@@ -42,6 +42,11 @@ const CartScreen = props => {
             />
         </View>
     )
+}
+
+
+CartScreen.navigationOptions = {
+    headerTitle : "Your Cart"
 }
 
 const styles = StyleSheet.create({
