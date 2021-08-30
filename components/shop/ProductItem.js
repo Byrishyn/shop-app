@@ -32,9 +32,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         elevation: 5,
         borderRadius: 10,
-        borderColor: "white",
+        backgroundColor: "white",
         margin: 20,
-        backgroundColor: "#FFF"
     },
     imageContainer: {
         width: "100%",
