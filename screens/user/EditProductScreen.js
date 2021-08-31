@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useReducer } from "react"
 import { StyleSheet, Text, View, TextInput, ScrollView, Platform, Alert } from "react-native"
 import { HeaderButtons, Item } from "react-navigation-header-buttons"
 import { useSelector, useDispatch } from "react-redux"
@@ -6,16 +6,34 @@ import { useSelector, useDispatch } from "react-redux"
 import HeaderButton from "../../components/UI/HeaderButton"
 import * as productsActions from "../../store/actions/product"
 
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE"
+
+const formReducer = (state, action) =>{
+    if (action.type === FORM_INPUT_UPDATE){
+
+    }
+}
+
 const EditProductScreen = props => {
     const dispatch = useDispatch();
     const productId = props.navigation.getParam("productId")
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === productId))
 
-    const [title, setTitle] = useState(editedProduct ? editedProduct.title : "")
-    const [isTitleValid, setIsTitleValid] = useState(false)
-    const [imageURL, setImageURL] = useState(editedProduct ? editedProduct.imageUrl : "")
-    const [price, setPrice] = useState("")
-    const [description, setDescription] = useState(editedProduct ? editedProduct.description : "")
+    const [formState, dispatchFormState] = useReducer(formReducer, {
+        inputValue : {
+            title : editedProduct ? editedProduct.title : "",
+            imageUrl : editedProduct ? editedProduct.imageUrl : "",
+            description : editedProduct ? editedProduct.description : "",
+            price : "",
+        },
+        inputValidities: {
+            title : editedProduct ? true : false,
+            imageUrl : editedProduct ? true : false,
+            description : editedProduct ? true : false,
+            price : editedProduct ? true : false,
+        },
+        isFormValid: editedProduct ? true : false
+    });
 
     const submitHandler = useCallback(() => {
         if (!isTitleValid){
@@ -35,12 +53,16 @@ const EditProductScreen = props => {
     }, [submitHandler])
 
     const onTitleTextChange = text => {
-        if (text.trim().length === 0) {
-            setIsTitleValid(false)
-        } else {
-            setIsTitleValid(true)
+        let isValid = false
+        if (text.trim().lengthB > 0) {
+            isValid = true
         }
-        setTitle(true)
+        dispatchFormState({
+            type: FORM_INPUT_UPDATE,
+            value: text,
+            isValid: isValid,
+            input: "title"
+        })
     }
 
     return (
