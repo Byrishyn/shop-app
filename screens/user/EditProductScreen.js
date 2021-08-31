@@ -8,10 +8,28 @@ import * as productsActions from "../../store/actions/product"
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE"
 
-const formReducer = (state, action) =>{
-    if (action.type === FORM_INPUT_UPDATE){
-
+const formReducer = (state, action) => {
+    if (action.type === FORM_INPUT_UPDATE) {
+        const updatedValues = {
+            ...state.inputValues,
+            [action.input] : action.value
+        }
+        const updatedValidities = {
+            ...state.inputValidities,
+            [action.input] : action.isValid
+        }
+        let formIsValid = true;
+        for (const key in updatedValidities){
+            formIsValid = formIsValid && updatedValidities[key]
+        }
+        console.log(formIsValid);
+        return {
+            formIsValid: formIsValid,
+            inputValues: updatedValues,
+            inputValidities: updatedValidities,
+        }
     }
+    return state;
 }
 
 const EditProductScreen = props => {
@@ -20,48 +38,48 @@ const EditProductScreen = props => {
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === productId))
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
-        inputValue : {
-            title : editedProduct ? editedProduct.title : "",
-            imageUrl : editedProduct ? editedProduct.imageUrl : "",
-            description : editedProduct ? editedProduct.description : "",
-            price : "",
+        inputValues: {
+            title: editedProduct ? editedProduct.title : "",
+            imageUrl: editedProduct ? editedProduct.imageUrl : "",
+            description: editedProduct ? editedProduct.description : "",
+            price: "",
         },
         inputValidities: {
-            title : editedProduct ? true : false,
-            imageUrl : editedProduct ? true : false,
-            description : editedProduct ? true : false,
-            price : editedProduct ? true : false,
+            title: editedProduct ? true : false,
+            imageUrl: editedProduct ? true : false,
+            description: editedProduct ? true : false,
+            price: editedProduct ? true : false,
         },
-        isFormValid: editedProduct ? true : false
+        formIsValid: editedProduct ? true : false
     });
 
     const submitHandler = useCallback(() => {
-        if (!isTitleValid){
-            Alert.alert("Wrong input", "Please check the error on the form",[{text:"Ok"}])
+        if (!formState.formIsValid) {
+            Alert.alert("Wrong input", "Please check the error on the form", [{ text: "Ok" }])
             return;
         }
         if (editedProduct) {
-            dispatch(productsActions.editProduct(productId, title, imageURL, description))
+            dispatch(productsActions.editProduct(productId, formState.inputValues.title, formState.inputValues.imageUrl, formState.inputValues.description))
         } else {
-            dispatch(productsActions.addProduct(title, imageURL, +price, description))
+            dispatch(productsActions.addProduct(formState.inputValues.title, formState.inputValues.imageUrl, +formState.inputValues.price, formState.inputValues.description))
         }
         props.navigation.goBack()
-    }, [dispatch, title, description, price, imageURL])
+    }, [dispatch, formState, productId])
 
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler })
     }, [submitHandler])
 
-    const onTitleTextChange = text => {
+    const onTextChange = (inputIdentifier, text) => {
         let isValid = false
-        if (text.trim().lengthB > 0) {
+        if (text.trim().length > 0) {
             isValid = true
         }
         dispatchFormState({
             type: FORM_INPUT_UPDATE,
             value: text,
             isValid: isValid,
-            input: "title"
+            input: inputIdentifier
         })
     }
 
@@ -72,18 +90,18 @@ const EditProductScreen = props => {
                     <Text style={styles.label}>Title</Text>
                     <TextInput
                         style={styles.input}
-                        value={title}
-                        onChangeText={onTitleTextChange}
+                        value={formState.inputValues.title}
+                        onChangeText={onTextChange.bind(this,"title")}
                         autoCorrect
                     />
-                    {!isTitleValid && <Text>Please enter a valid title !</Text>}
+                    {!formState.inputValidities.title && <Text>Please enter a valid title !</Text>}
                 </View>
                 <View style={styles.formComponent}>
                     <Text style={styles.label}>Image URL</Text>
                     <TextInput
                         style={styles.input}
-                        value={imageURL}
-                        onChangeText={text => setImageURL(text)}
+                        value={formState.inputValues.imageUrl}
+                        onChangeText={onTextChange.bind(this,"imageUrl")}
                         autoCorrect
                     />
                 </View>
@@ -92,8 +110,8 @@ const EditProductScreen = props => {
                         <Text style={styles.label}>Price</Text>
                         <TextInput
                             style={styles.input}
-                            value={price}
-                            onChangeText={text => setPrice(text)}
+                            value={formState.inputValues.price}
+                            onChangeText={onTextChange.bind(this,"price")}
                             keyboardType="decimal-pad"
                             autoCorrect
                         />
@@ -103,8 +121,8 @@ const EditProductScreen = props => {
                     <Text style={styles.label}>Description</Text>
                     <TextInput
                         style={styles.input}
-                        value={description}
-                        onChangeText={text => setDescription(text)}
+                        value={formState.inputValues.description}
+                        onChangeText={onTextChange.bind(this,"description")}
                         autoCorrect
                     />
                 </View>
