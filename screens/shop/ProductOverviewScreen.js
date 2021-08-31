@@ -1,14 +1,25 @@
 import React from "react"
-import { StyleSheet, FlatList, View, Platform } from "react-native"
+import { StyleSheet, FlatList, View, Platform, Button } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import ProductItem from "../../components/shop/ProductItem"
 import * as cartActions from "../../store/actions/cart"
 import { HeaderButtons, Item } from "react-navigation-header-buttons"
 import HeaderButton from "../../components/UI/HeaderButton"
+import Colors from "../../constants/Colors"
 
 const ProductOverviewScreen = props => {
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch();
+
+    const onSelectHander = (id, title) => {
+        props.navigation.navigate({
+            routeName: "ProductDetail",
+            params: {
+                productId: id,
+                productTitle: title
+            }
+        })
+    }
 
     const renderShopItem = itemData => {
         return (
@@ -19,16 +30,24 @@ const ProductOverviewScreen = props => {
                 onAddToCart={() => {
                     dispatch(cartActions.addToCart(itemData.item))
                 }}
-                onViewDetail={() => {
-                    props.navigation.navigate({
-                        routeName: "ProductDetail",
-                        params: {
-                            productId: itemData.item.id,
-                            productTitle: itemData.item.title
-                        }
-                    })
+                onSelect={() => {
+                    onSelectHander(itemData.item.id, itemData.item.title)
                 }}
-            />
+            >
+                <Button
+                    title="Details"
+                    onPress={() => {
+                        onSelectHander(itemData.item.id, itemData.item.title)
+                    }}
+                    color={Colors.primary}
+                />
+                <Button
+                    title="Add to cart" onPress={() => {
+                        dispatch(cartActions.addToCart(itemData.item))
+                    }}
+                    color={Colors.primary}
+                />
+            </ProductItem>
         )
     }
 
