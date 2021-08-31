@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { StyleSheet, Text, View, TextInput, ScrollView, Platform } from "react-native"
+import { StyleSheet, Text, View, TextInput, ScrollView, Platform, Alert } from "react-native"
 import { HeaderButtons, Item } from "react-navigation-header-buttons"
 import { useSelector, useDispatch } from "react-redux"
 
@@ -12,11 +12,16 @@ const EditProductScreen = props => {
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === productId))
 
     const [title, setTitle] = useState(editedProduct ? editedProduct.title : "")
+    const [isTitleValid, setIsTitleValid] = useState(false)
     const [imageURL, setImageURL] = useState(editedProduct ? editedProduct.imageUrl : "")
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState(editedProduct ? editedProduct.description : "")
 
     const submitHandler = useCallback(() => {
+        if (!isTitleValid){
+            Alert.alert("Wrong input", "Please check the error on the form",[{text:"Ok"}])
+            return;
+        }
         if (editedProduct) {
             dispatch(productsActions.editProduct(productId, title, imageURL, description))
         } else {
@@ -29,6 +34,15 @@ const EditProductScreen = props => {
         props.navigation.setParams({ submit: submitHandler })
     }, [submitHandler])
 
+    const onTitleTextChange = text => {
+        if (text.trim().length === 0) {
+            setIsTitleValid(false)
+        } else {
+            setIsTitleValid(true)
+        }
+        setTitle(true)
+    }
+
     return (
         <ScrollView>
             <View style={styles.form}>
@@ -37,9 +51,10 @@ const EditProductScreen = props => {
                     <TextInput
                         style={styles.input}
                         value={title}
-                        onChangeText={text => setTitle(text)}
+                        onChangeText={onTitleTextChange}
                         autoCorrect
                     />
+                    {!isTitleValid && <Text>Please enter a valid title !</Text>}
                 </View>
                 <View style={styles.formComponent}>
                     <Text style={styles.label}>Image URL</Text>
