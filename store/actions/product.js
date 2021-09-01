@@ -7,26 +7,35 @@ export const SET_PRODUCTS = "SET_PRODUCTS"
 
 export const fetchProducts = () => {
     return async dispatch => {
-        const response = await fetch("https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json")
+        try {
+            const response = await fetch("https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json")
 
-        const respData = await response.json()
-        const loadedProducts = []
+            if (!response.ok){
+                throw new Error("Something went wrong !")
+            }
 
-        for (const key in respData) {
-            loadedProducts.push(new Product(
-                key,
-                "u1",
-                respData[key].title,
-                respData[key].imageUrl,
-                respData[key].description,
-                respData[key].price
-            ))
+            const respData = await response.json()
+            const loadedProducts = []
+    
+            for (const key in respData) {
+                loadedProducts.push(new Product(
+                    key,
+                    "u1",
+                    respData[key].title,
+                    respData[key].imageUrl,
+                    respData[key].description,
+                    respData[key].price
+                ))
+            }
+    
+            dispatch({
+                type: SET_PRODUCTS,
+                products: loadedProducts
+            });
+        } catch ( err ) {
+            throw err;
         }
-
-        dispatch({
-            type: SET_PRODUCTS,
-            products: loadedProducts
-        });
+        
     }
 }
 

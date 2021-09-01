@@ -1,5 +1,5 @@
-import React, { useEffect } from "react"
-import { StyleSheet, FlatList, View, Platform, Button } from "react-native"
+import React, { useCallback, useEffect, useState } from "react"
+import { StyleSheet, FlatList, View, Platform, Button, ActivityIndicator, Text } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import ProductItem from "../../components/shop/ProductItem"
 import * as cartActions from "../../store/actions/cart"
@@ -9,11 +9,24 @@ import HeaderButton from "../../components/UI/HeaderButton"
 import Colors from "../../constants/Colors"
 
 const ProductOverviewScreen = props => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch();
 
+    const loadData = useCallback(async () => {
+        setError(null)
+        setIsLoading(true)
+        try{
+            await dispatch(productsActions.fetchProducts())
+        } catch ( err ) {
+            setError(err.message)
+        }
+        setIsLoading(false)
+    },[dispatch])
+
     useEffect(() => {
-        dispatch(productsActions.fetchProducts())
+        loadData()
     },[dispatch])
 
     const onSelectHander = (id, title) => {
@@ -24,6 +37,31 @@ const ProductOverviewScreen = props => {
                 productTitle: title
             }
         })
+    }
+
+    if (error){
+        return (
+            <View style={styles.centered}>
+                <Text>An error as occured.</Text>
+                <Button title="Try again ?" color={Colors.primary} onPress={loadData}/>
+            </View>
+        )
+    }
+
+    if (isLoading){
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size="large" color={Colors.primary}/>
+            </View>
+        )
+    }
+
+    if (!isLoading && products.length === 0){
+        return (
+            <View style={styles.centered}>
+                <Text>No products to display. Start adding some !</Text>
+            </View>
+        )
     }
 
     const renderShopItem = itemData => {
@@ -101,6 +139,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    centered: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
     }
 })
 
