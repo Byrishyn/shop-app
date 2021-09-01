@@ -1,5 +1,5 @@
-import React from "react"
-import { View, Text, Button, StyleSheet, FlatList } from "react-native"
+import React, { useState } from "react"
+import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import CartItem from "../../components/shop/CartItem"
 import Colors from "../../constants/Colors"
@@ -8,6 +8,7 @@ import * as cartActions from "../../store/actions/cart"
 import * as ordersActions from "../../store/actions/orders"
 
 const CartScreen = props => {
+    const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch()
     const cartTotalAmount = useSelector(state => state.cart.totalAmount)
     const cartItems = useSelector(state => {
@@ -23,11 +24,27 @@ const CartScreen = props => {
         }
         return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
     })
+
+    const onOrderHandler = async () => {
+        setIsLoading(true);
+        await dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))
+        setIsLoading(false);
+    }
+
     return (
         <View style={styles.screen}>
             <Card style={styles.summary}>
-                <Text style={styles.summaryText}>Total : <Text style={styles.amount}>${Math.round(cartTotalAmount.toFixed(2)*100)/100}</Text></Text>
-                <Button title="Order now !" onPress={() => dispatch(ordersActions.addOrder(cartItems, cartTotalAmount))} color={Colors.accent} disabled={cartItems.length === 0} />
+                <Text style={styles.summaryText}>Total : <Text style={styles.amount}>${Math.round(cartTotalAmount.toFixed(2) * 100) / 100}</Text></Text>
+                {isLoading ? (
+                    <ActivityIndicator size="small" color={Colors.primary} />
+                ) : (
+                    <Button
+                        title="Order now !"
+                        onPress={onOrderHandler}
+                        color={Colors.accent}
+                        disabled={cartItems.length === 0}
+                    />
+                )}
             </Card>
             <FlatList
                 data={cartItems}
@@ -48,7 +65,7 @@ const CartScreen = props => {
 
 
 CartScreen.navigationOptions = {
-    headerTitle : "Your Cart"
+    headerTitle: "Your Cart"
 }
 
 const styles = StyleSheet.create({
