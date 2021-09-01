@@ -41,9 +41,13 @@ export const fetchProducts = () => {
 
 export const deleteProduct = productId => {
     return async dispatch => {
-        await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`, {
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`, {
             method: "DELETE"
         })
+
+        if (!response.ok){
+            throw new Error("Something went wrong")
+        }
         dispatch({ type: DELETE_PRODUCT, pid: productId })
     }
 }
@@ -65,8 +69,6 @@ export const addProduct = (title, imageUrl, price, description) => {
 
         const respData = await response.json()
 
-        console.log(respData)
-
         dispatch({
             type: ADD_PRODUCT,
             itemData: {
@@ -82,7 +84,7 @@ export const addProduct = (title, imageUrl, price, description) => {
 
 export const editProduct = (id, title, imageUrl, description) => {
     return async dispatch => {
-        await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`, {
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`, {
             method: "PATCH",
             headers: {
                 "Content-type": "application/json"
@@ -93,6 +95,11 @@ export const editProduct = (id, title, imageUrl, description) => {
                 description
             })
         })
+
+        if (!response.ok){
+            throw new Error("Something went wrong")
+        }
+
         dispatch({
             type: EDIT_PRODUCT,
             pid: id,
