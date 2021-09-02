@@ -10,13 +10,13 @@ export const fetchProducts = () => {
         try {
             const response = await fetch("https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json")
 
-            if (!response.ok){
+            if (!response.ok) {
                 throw new Error("Something went wrong !")
             }
 
             const respData = await response.json()
             const loadedProducts = []
-    
+
             for (const key in respData) {
                 loadedProducts.push(new Product(
                     key,
@@ -27,25 +27,26 @@ export const fetchProducts = () => {
                     respData[key].price
                 ))
             }
-    
+
             dispatch({
                 type: SET_PRODUCTS,
                 products: loadedProducts
             });
-        } catch ( err ) {
+        } catch (err) {
             throw err;
         }
-        
+
     }
 }
 
 export const deleteProduct = productId => {
-    return async dispatch => {
-        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`, {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token;
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth${token}`, {
             method: "DELETE"
         })
 
-        if (!response.ok){
+        if (!response.ok) {
             throw new Error("Something went wrong")
         }
         dispatch({ type: DELETE_PRODUCT, pid: productId })
@@ -53,8 +54,9 @@ export const deleteProduct = productId => {
 }
 
 export const addProduct = (title, imageUrl, price, description) => {
-    return async dispatch => {
-        const response = await fetch("https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json", {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token;
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`, {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -83,8 +85,9 @@ export const addProduct = (title, imageUrl, price, description) => {
 }
 
 export const editProduct = (id, title, imageUrl, description) => {
-    return async dispatch => {
-        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json`, {
+    return async (dispatch, getState) => {
+        const token = getState().auth.token;
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${id}.json?auth=${token}`, {
             method: "PATCH",
             headers: {
                 "Content-type": "application/json"
@@ -96,7 +99,7 @@ export const editProduct = (id, title, imageUrl, description) => {
             })
         })
 
-        if (!response.ok){
+        if (!response.ok) {
             throw new Error("Something went wrong")
         }
 

@@ -27,9 +27,9 @@ export const signUp = (email, password) => {
                 throw new Error(message)
             }
 
-            const respData = response.json()
+            const respData = await response.json()
 
-            dispatch({ type: SIGNUP })
+            dispatch({ type: SIGNUP, token: respData.idToken, userId: respData.localId })
         } catch (err) {
             throw err;
         }
@@ -65,9 +65,9 @@ export const login = (email, password) => {
                 throw new Error(message)
             }
 
-            const respData = response.json()
+            const respData = await response.json()
 
-            dispatch({ type: LOGIN })
+            dispatch({ type: LOGIN, token: respData.idToken, userId: respData.localId })
         } catch (err) {
             throw err;
         }
