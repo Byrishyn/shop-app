@@ -13,6 +13,7 @@ import Colors from "../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import UserProductScreen from "../screens/user/UserProductScreen";
 import AuthScreen from "../screens/user/AuthScreen";
+import StartingScreen from "../screens/StartingScreen";
 
 const defaultNavOptions = {
     headerStyle: {
@@ -82,6 +83,7 @@ const AuthNavigator = createStackNavigator({
 })
 
 const MainNavigator = createSwitchNavigator({
+    Start: StartingScreen,
     Auth: AuthNavigator,
     Shop: ShopNavigator,
 })
