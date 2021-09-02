@@ -1,5 +1,5 @@
 import React from "react"
-import { FlatList, Platform, Button, Alert } from "react-native"
+import { FlatList, Platform, Button, Alert, View, Text } from "react-native"
 import { useSelector, useDispatch } from "react-redux"
 import { HeaderButtons, Item } from "react-navigation-header-buttons"
 import HeaderButton from "../../components/UI/HeaderButton"
@@ -21,6 +21,14 @@ const UserProductScreen = props => {
             { text: "NO !", style: "default" },
             { text: "Yes", style: "destructive", onPress: () => dispatch(productsActions.deleteProduct(productId))}
         ])
+    }
+
+    if (products.length === 0){
+        return (
+            <View style={{flex:1, alignItems:"center",justifyContent:"center"}}>
+                <Text>No products found, start adding some !</Text>
+            </View>
+        )
     }
 
     return (
