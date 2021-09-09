@@ -1,11 +1,10 @@
 import React from "react";
-import { createStackNavigator } from "react-navigation-stack";
-import { createDrawerNavigator, DrawerNavigatorItems } from "react-navigation-drawer";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { Platform, Button, SafeAreaView, View } from "react-native";
 import { useDispatch } from "react-redux";
+import { createDrawerNavigation } from "@react-navigation/drawer"
+import { createStackNavigator } from "@react-navigation/stack"
 
-import ProductOverviewScreen from "../screens/shop/ProductOverviewScreen";
+import ProductOverviewScreen, { screenOptions } from "../screens/shop/ProductOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrdersScreen from "../screens/shop/OrdersScreen";
@@ -25,6 +24,29 @@ const defaultNavOptions = {
     headerBackTitleStyle: { fontFamily: "open-sans" },
     headerTintColor: Platform.OS === "android" ? "white" : Colors.primary,
 }
+
+const ProductsStackNavigator = createStackNavigator()
+
+export const ProductsNavigator = () => {
+    return (
+        <ProductsStackNavigator.Navigator screenOptions={defaultNavOptions}>
+            <ProductsStackNavigator.Screen
+                name="ProductsOverview"
+                component={ProductOverviewScreen}
+                options={screenOptions}
+            />
+            <ProductsStackNavigator.Screen
+                name="ProductDetail"
+                component={ProductDetailScreen}
+            />
+            <ProductsStackNavigator.Screen
+                name="Cart"
+                component={CartScreen}
+            />
+        </ProductsStackNavigator.Navigator>
+    )
+}
+
 
 const ProductsNavigator = createStackNavigator({
     ProductsOverview: ProductOverviewScreen,
@@ -79,12 +101,12 @@ const ShopNavigator = createDrawerNavigator({
     contentComponent: props => {
         const dispatch = useDispatch()
         return (
-            <View style={{flex:1, padding: 20}}>
-                <SafeAreaView forceInset={{top:"always", horizontal: "never"}}>
+            <View style={{ flex: 1, padding: 20 }}>
+                <SafeAreaView forceInset={{ top: "always", horizontal: "never" }}>
                     <DrawerNavigatorItems {...props} />
-                    <Button title="Log out" color={Colors.primary} onPress={()=>{
+                    <Button title="Log out" color={Colors.primary} onPress={() => {
                         dispatch(authActions.logout())
-                    }}/>
+                    }} />
                 </SafeAreaView>
             </View>
         )

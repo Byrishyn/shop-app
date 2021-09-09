@@ -111,10 +111,10 @@ const ProductOverviewScreen = props => {
     )
 }
 
-ProductOverviewScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
     return {
         headerTitle: "All products",
-        headerLeft:
+        headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Menu"
@@ -124,8 +124,9 @@ ProductOverviewScreen.navigationOptions = navData => {
                             navData.navigation.toggleDrawer()
                         }}
                 />
-            </HeaderButtons>,
-        headerRight:
+            </HeaderButtons>
+        ),
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Cart"
@@ -136,6 +137,7 @@ ProductOverviewScreen.navigationOptions = navData => {
                         }}
                 />
             </HeaderButtons>
+        )
     }
 }
 
