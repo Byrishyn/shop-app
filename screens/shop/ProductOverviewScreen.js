@@ -18,19 +18,19 @@ const ProductOverviewScreen = props => {
     const loadData = useCallback(async () => {
         setError(null)
         setIsRefreshing(true)
-        try{
+        try {
             await dispatch(productsActions.fetchProducts())
-        } catch ( err ) {
+        } catch (err) {
             setError(err.message)
         }
         setIsRefreshing(false)
-    },[dispatch])
+    }, [dispatch])
 
 
     useEffect(() => {
         setIsLoading(true)
         loadData().then(() => setIsLoading(false))
-    },[dispatch])
+    }, [dispatch])
 
     useEffect(() => {
         const unsubscribe = props.navigation.addListener(
@@ -43,33 +43,31 @@ const ProductOverviewScreen = props => {
     })
 
     const onSelectHander = (id, title) => {
-        props.navigation.navigate({
-            routeName: "ProductDetail",
-            params: {
-                productId: id,
-                productTitle: title
-            }
-        })
+        props.navigation.navigate("ProductDetail", {
+            productId: id,
+            productTitle: title
+        },
+        )
     }
 
-    if (error){
+    if (error) {
         return (
             <View style={styles.centered}>
                 <Text>An error as occured.</Text>
-                <Button title="Try again ?" color={Colors.primary} onPress={loadData}/>
+                <Button title="Try again ?" color={Colors.primary} onPress={loadData} />
             </View>
         )
     }
 
-    if (isLoading){
+    if (isLoading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size="large" color={Colors.primary}/>
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         )
     }
 
-    if (!isLoading && products.length === 0){
+    if (!isLoading && products.length === 0) {
         return (
             <View style={styles.centered}>
                 <Text>No products to display. Start adding some !</Text>
