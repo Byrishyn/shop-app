@@ -4,17 +4,17 @@ import { useDispatch } from "react-redux";
 import { createDrawerNavigation } from "@react-navigation/drawer"
 import { createStackNavigator } from "@react-navigation/stack"
 
-import ProductOverviewScreen, { screenOptions } from "../screens/shop/ProductOverviewScreen";
-import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
-import CartScreen from "../screens/shop/CartScreen";
-import OrdersScreen from "../screens/shop/OrdersScreen";
-import EditProductScreen from "../screens/user/EditProductScreen";
-import Colors from "../constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import UserProductScreen from "../screens/user/UserProductScreen";
-import AuthScreen from "../screens/user/AuthScreen";
+import ProductOverviewScreen, { screenOptions as POSOptions } from "../screens/shop/ProductOverviewScreen";
+import ProductDetailScreen, { screenOptions as PDSOptions } from "../screens/shop/ProductDetailScreen";
+import CartScreen, { screenOptions as CSOptions } from "../screens/shop/CartScreen";
+import OrdersScreen, { screenOptions as OSOptions } from "../screens/shop/OrdersScreen";
+import EditProductScreen, { screenOptions as EPSOptions } from "../screens/user/EditProductScreen";
+import UserProductScreen, { screenOptions as UPSOptions } from "../screens/user/UserProductScreen";
+import AuthScreen, { screenOptions as ASOptions } from "../screens/user/AuthScreen";
 import StartingScreen from "../screens/StartingScreen";
 import * as authActions from "../store/actions/auth"
+import Colors from "../constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 
 const defaultNavOptions = {
     headerStyle: {
@@ -33,15 +33,17 @@ export const ProductsNavigator = () => {
             <ProductsStackNavigator.Screen
                 name="ProductsOverview"
                 component={ProductOverviewScreen}
-                options={screenOptions}
+                options={POSOptions}
             />
             <ProductsStackNavigator.Screen
                 name="ProductDetail"
                 component={ProductDetailScreen}
+                options={PDSOptions}
             />
             <ProductsStackNavigator.Screen
                 name="Cart"
                 component={CartScreen}
+                options={CSOptions}
             />
         </ProductsStackNavigator.Navigator>
     )
@@ -63,6 +65,20 @@ const ProductsNavigator = createStackNavigator({
     }
 })
 
+const OrdersStackNavigator = createStackNavigator()
+
+const OrdersNavigator = () => {
+    return (
+        <OrdersStackNavigator.Navigator screenOptions={defaultNavOptions}>
+            <OrdersStackNavigator.Screen
+                name="Orders"
+                component={OrdersScreen}
+                options={OSOptions}
+            />
+        </OrdersStackNavigator.Navigator>
+    )
+}
+
 const OrdersNavigator = createStackNavigator({
     Orders: OrdersScreen,
 }, {
@@ -75,6 +91,25 @@ const OrdersNavigator = createStackNavigator({
         />
     }
 })
+
+const AdminStackNavigator = createStackNavigator()
+
+const AdminNavigator = () => {
+    return (
+        <AdminStackNavigator.Navigator screenOptions={defaultNavOptions}>
+            <AdminStackNavigator.Screen
+                name="UserProducts"
+                component={UserProductScreen}
+                options={UPSOptions}
+            />
+            <AdminStackNavigator.Screen
+                name="EditProduct"
+                component={EditProductScreen}
+                options={EPSOptions}
+            />
+        </AdminStackNavigator.Navigator>
+    )
+}
 
 const AdminNavigator = createStackNavigator({
     UserProducts: UserProductScreen,
@@ -112,6 +147,20 @@ const ShopNavigator = createDrawerNavigator({
         )
     }
 })
+
+const AuthStackNavigator = createStackNavigator()
+
+const AuthNavigator = () => {
+    return (
+        <AuthStackNavigator.Navigator>
+            <AuthStackNavigator.Screen
+                name="Auth"
+                component={AuthScreen}
+                options={ASOptions}
+            />
+        </AuthStackNavigator.Navigator>
+    )
+}
 
 const AuthNavigator = createStackNavigator({
     Auth: AuthScreen
