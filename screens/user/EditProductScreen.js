@@ -79,7 +79,17 @@ const EditProductScreen = props => {
     }, [dispatch, formState, productId])
 
     useEffect(() => {
-        props.navigation.setParams({ submit: submitHandler })
+        props.navigation.setOptions({
+            headerRight: () => (
+                <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item
+                        title="Save"
+                        iconName={Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"}
+                        onPress={submitHandler}
+                    />
+                </HeaderButtons>
+            )
+        })
     }, [submitHandler])
 
     useEffect(() => {
@@ -171,20 +181,10 @@ const EditProductScreen = props => {
 }
 
 export const screenOptions = navData => {
-    const onSubmit = navData.route.params ? navData.route.params.submit : null
     const navParams = navData.route.params ? navData.route.params : {}
 
     return {
         headerTitle: navParams.productId ? "Edit Product" : "Add Product",
-        headerRight: () => (
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName={Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"}
-                    onPress={onSubmit}
-                />
-            </HeaderButtons>
-        )
     }
 }
 
