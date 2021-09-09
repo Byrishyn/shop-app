@@ -26,12 +26,6 @@ const ProductOverviewScreen = props => {
         setIsRefreshing(false)
     },[dispatch])
 
-    useEffect(() => {
-        const willFocus = props.navigation.addListener("willFocus", loadData)
-        return () => {
-            willFocus.remove()
-        }
-    })
 
     useEffect(() => {
         setIsLoading(true)
