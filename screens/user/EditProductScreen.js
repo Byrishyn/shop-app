@@ -38,7 +38,8 @@ const EditProductScreen = props => {
     const [error, setError] = useState()
     const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch();
-    const productId = props.navigation.getParam("productId")
+    const navParams = props.route.params ? props.route.params : {}
+    const productId = navParams.productId
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === productId))
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -170,9 +171,11 @@ const EditProductScreen = props => {
 }
 
 export const screenOptions = navData => {
-    const onSubmit = navData.navigation.getParam("submit");
+    const onSubmit = navData.route.params ? navData.route.params.submit : null
+    const navParams = navData.route.params ? navData.route.params : {}
+
     return {
-        headerTitle: navData.navigation.getParam("productId") ? "Edit Product" : "Add Product",
+        headerTitle: navParams.productId ? "Edit Product" : "Add Product",
         headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
