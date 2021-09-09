@@ -27,7 +27,7 @@ const defaultNavOptions = {
 
 const ProductsStackNavigator = createStackNavigator()
 
-export const ProductsNavigator = () => {
+const ProductsNavigator = () => {
     return (
         <ProductsStackNavigator.Navigator screenOptions={defaultNavOptions}>
             <ProductsStackNavigator.Screen
@@ -84,7 +84,7 @@ const AdminNavigator = () => {
 
 const ShopDrawerNavigator = createDrawerNavigator()
 
-const ShopNavigator = () => {
+export const ShopNavigator = () => {
     const dispatch = useDispatch()
     return (
         <ShopDrawerNavigator.Navigator
@@ -100,7 +100,7 @@ const ShopNavigator = () => {
                     </View>
                 )
             }}
-            drawerContentOptions={{
+            screenOptions={{
                 activeTintColor: Colors.primary
             }}
         >
@@ -143,9 +143,9 @@ const ShopNavigator = () => {
 
 const AuthStackNavigator = createStackNavigator()
 
-const AuthNavigator = () => {
+export const AuthNavigator = () => {
     return (
-        <AuthStackNavigator.Navigator>
+        <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
             <AuthStackNavigator.Screen
                 name="Auth"
                 component={AuthScreen}
@@ -154,12 +154,3 @@ const AuthNavigator = () => {
         </AuthStackNavigator.Navigator>
     )
 }
-
-
-const MainNavigator = createSwitchNavigator({
-    Start: StartingScreen,
-    Auth: AuthNavigator,
-    Shop: ShopNavigator,
-})
-
-export default createAppContainer(MainNavigator)
