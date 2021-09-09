@@ -82,8 +82,8 @@ const EditProductScreen = props => {
     }, [submitHandler])
 
     useEffect(() => {
-        if (error){
-            Alert.alert("ERROR", error, [{text:"Okay"}])
+        if (error) {
+            Alert.alert("ERROR", error, [{ text: "Okay" }])
         }
     }, [error])
 
@@ -96,17 +96,17 @@ const EditProductScreen = props => {
         })
     }, [dispatchFormState])
 
-    if (isLoading){
+    if (isLoading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size="large" color={Colors.primary}/>
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         )
     }
 
     return (
         <KeyboardAvoidingView
-            style={{flex:1}}
+            style={{ flex: 1 }}
             behavior="padding"
             keyboardVerticalOffset={100}
         >
@@ -173,7 +173,7 @@ export const screenOptions = navData => {
     const onSubmit = navData.navigation.getParam("submit");
     return {
         headerTitle: navData.navigation.getParam("productId") ? "Edit Product" : "Add Product",
-        headerRight:
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Save"
@@ -181,6 +181,7 @@ export const screenOptions = navData => {
                     onPress={onSubmit}
                 />
             </HeaderButtons>
+        )
     }
 }
 
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     centered: {
-        flex :1,
+        flex: 1,
         alignItems: "center",
         justifyContent: "center"
     }

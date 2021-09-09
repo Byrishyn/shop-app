@@ -32,6 +32,16 @@ const ProductOverviewScreen = props => {
         loadData().then(() => setIsLoading(false))
     },[dispatch])
 
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener(
+            "focus",
+            loadData
+        )
+        return () => {
+            unsubscribe()
+        }
+    })
+
     const onSelectHander = (id, title) => {
         props.navigation.navigate({
             routeName: "ProductDetail",

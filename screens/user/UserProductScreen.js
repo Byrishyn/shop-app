@@ -63,7 +63,7 @@ const UserProductScreen = props => {
 export const screenOptions = navData => {
     return {
         headerTitle: "Your Products",
-        headerLeft:
+        headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Menu"
@@ -73,8 +73,8 @@ export const screenOptions = navData => {
                             navData.navigation.toggleDrawer()
                         }}
                 />
-            </HeaderButtons>,
-        headerRight:
+            </HeaderButtons>),
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Add"
@@ -84,7 +84,7 @@ export const screenOptions = navData => {
                             navData.navigation.navigate("EditProduct")
                         }}
                 />
-            </HeaderButtons>,
+            </HeaderButtons>),
     }
 }
 
