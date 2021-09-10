@@ -1,4 +1,5 @@
 import Product from "../../models/product"
+import * as Notifications from "expo-notifications"
 
 export const DELETE_PRODUCT = "DELETE_PRODUCT"
 export const ADD_PRODUCT = "ADD_PRODUCT"
@@ -57,6 +58,16 @@ export const deleteProduct = productId => {
 
 export const addProduct = (title, imageUrl, price, description) => {
     return async (dispatch, getState) => {
+        let pushToken;
+        const statusObj = await Notifications.getPermissionsAsync()
+        if (statusObj.status !== "granted"){
+            statusObj = await Notifications.requestPermissionsAsync()
+        }
+        if (statusObj.status !== "granted"){
+            pushToken = null;
+        } else {
+            pushToken = (await Notifications.getExpoPushTokenAsync()).data
+        }
         const token = getState().auth.token;
         const userId = getState().auth.userId
         const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`, {
@@ -69,7 +80,8 @@ export const addProduct = (title, imageUrl, price, description) => {
                 price,
                 imageUrl,
                 description,
-                ownerId: userId
+                ownerId: userId,
+                ownerPushToken : pushToken,
             })
         })
 
