@@ -14,6 +14,7 @@ export default (state = initialState, action) => {
             const addedProduct = action.product
             const price = addedProduct.price
             const title = addedProduct.title
+            const pushToken = addedProduct.pushToken
 
             let cartItemToAdd;
 
@@ -22,10 +23,17 @@ export default (state = initialState, action) => {
                     state.items[addedProduct.id].quantity + 1,
                     title,
                     price,
+                    pushToken,
                     state.items[addedProduct.id].sum + price
                 )
             } else {
-                cartItemToAdd = new CartItem(1, title, price, price);
+                cartItemToAdd = new CartItem(
+                    1,
+                    title,
+                    price,
+                    pushToken,
+                    price
+                );
             }
             return {
                 ...state,
@@ -57,7 +65,7 @@ export default (state = initialState, action) => {
         case ADD_ORDER:
             return initialState;
         case DELETE_PRODUCT:
-            if (!state.items[action.pid]){
+            if (!state.items[action.pid]) {
                 return state
             }
             const updatedItems = { ...state.items }

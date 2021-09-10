@@ -11,6 +11,7 @@ import AppLoading from "expo-app-loading"
 import * as Font from "expo-font"
 import ReduxThunk from "redux-thunk"
 import AppNavigator from './navigation/AppNavigator';
+import * as Notifications from "expo-notifications"
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -28,11 +29,17 @@ const fetchFonts = () => {
   })
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true }
+  }
+})
+
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false)
 
 
-  
+
   if (!fontLoaded) {
     return (
       <AppLoading
@@ -46,7 +53,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <AppNavigator/>
+      <AppNavigator />
     </Provider>
   );
 }
