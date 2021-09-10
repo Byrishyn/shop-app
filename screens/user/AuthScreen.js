@@ -62,7 +62,7 @@ const AuthScreen = props => {
         setIsLoading(true)
         try {
             await dispatch(action)
-            props.navigation.navigate("Shop")
+            //props.navigation.navigate("Shop")
         } catch (err) {
             setError(err.message)
             setIsLoading(false)
@@ -71,7 +71,7 @@ const AuthScreen = props => {
 
     useEffect(() => {
         if (error) {
-            Alert.alert("An error occured", error, [{text: "Okay"}])
+            Alert.alert("An error occured", error, [{ text: "Okay" }])
         }
     }, [error])
 
@@ -117,7 +117,7 @@ const AuthScreen = props => {
                             initialValue=""
                         />
                         <View style={styles.buttonContainer}>
-                            { isLoading ? (
+                            {isLoading ? (
                                 <ActivityIndicator color={Colors.primary} size="small" />
                             ) : (
                                 <Button
@@ -141,7 +141,7 @@ const AuthScreen = props => {
     )
 }
 
-AuthScreen.navigationOptions = {
+export const screenOptions = {
     headerTitle: "Please authenticate"
 }
 

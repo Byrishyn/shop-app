@@ -19,13 +19,13 @@ const UserProductScreen = props => {
     const deleteHandler = (productTitle, productId) => {
         Alert.alert("Are you sure ?", "Do you want to delete " + productTitle + " ?", [
             { text: "NO !", style: "default" },
-            { text: "Yes", style: "destructive", onPress: () => dispatch(productsActions.deleteProduct(productId))}
+            { text: "Yes", style: "destructive", onPress: () => dispatch(productsActions.deleteProduct(productId)) }
         ])
     }
 
-    if (products.length === 0){
+    if (products.length === 0) {
         return (
-            <View style={{flex:1, alignItems:"center",justifyContent:"center"}}>
+            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                 <Text>No products found, start adding some !</Text>
             </View>
         )
@@ -60,10 +60,10 @@ const UserProductScreen = props => {
 }
 
 
-UserProductScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
     return {
         headerTitle: "Your Products",
-        headerLeft:
+        headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Menu"
@@ -73,8 +73,8 @@ UserProductScreen.navigationOptions = navData => {
                             navData.navigation.toggleDrawer()
                         }}
                 />
-            </HeaderButtons>,
-        headerRight:
+            </HeaderButtons>),
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Add"
@@ -84,7 +84,7 @@ UserProductScreen.navigationOptions = navData => {
                             navData.navigation.navigate("EditProduct")
                         }}
                 />
-            </HeaderButtons>,
+            </HeaderButtons>),
     }
 }
 

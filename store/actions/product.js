@@ -44,7 +44,7 @@ export const fetchProducts = () => {
 export const deleteProduct = productId => {
     return async (dispatch, getState) => {
         const token = getState().auth.token;
-        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth${token}`, {
+        const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth=${token}`, {
             method: "DELETE"
         })
 
@@ -58,7 +58,7 @@ export const deleteProduct = productId => {
 export const addProduct = (title, imageUrl, price, description) => {
     return async (dispatch, getState) => {
         const token = getState().auth.token;
-        const userId = getState.auth.userId
+        const userId = getState().auth.userId
         const response = await fetch(`https://shop-app-cc5f7-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`, {
             method: "POST",
             headers: {

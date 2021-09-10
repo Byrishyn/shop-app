@@ -38,7 +38,8 @@ const EditProductScreen = props => {
     const [error, setError] = useState()
     const [isLoading, setIsLoading] = useState(false)
     const dispatch = useDispatch();
-    const productId = props.navigation.getParam("productId")
+    const navParams = props.route.params ? props.route.params : {}
+    const productId = navParams.productId
     const editedProduct = useSelector(state => state.products.userProducts.find(product => product.id === productId))
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -78,12 +79,22 @@ const EditProductScreen = props => {
     }, [dispatch, formState, productId])
 
     useEffect(() => {
-        props.navigation.setParams({ submit: submitHandler })
+        props.navigation.setOptions({
+            headerRight: () => (
+                <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item
+                        title="Save"
+                        iconName={Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"}
+                        onPress={submitHandler}
+                    />
+                </HeaderButtons>
+            )
+        })
     }, [submitHandler])
 
     useEffect(() => {
-        if (error){
-            Alert.alert("ERROR", error, [{text:"Okay"}])
+        if (error) {
+            Alert.alert("ERROR", error, [{ text: "Okay" }])
         }
     }, [error])
 
@@ -96,17 +107,17 @@ const EditProductScreen = props => {
         })
     }, [dispatchFormState])
 
-    if (isLoading){
+    if (isLoading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size="large" color={Colors.primary}/>
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         )
     }
 
     return (
         <KeyboardAvoidingView
-            style={{flex:1}}
+            style={{ flex: 1 }}
             behavior="padding"
             keyboardVerticalOffset={100}
         >
@@ -169,18 +180,11 @@ const EditProductScreen = props => {
     )
 }
 
-EditProductScreen.navigationOptions = navData => {
-    const onSubmit = navData.navigation.getParam("submit");
+export const screenOptions = navData => {
+    const navParams = navData.route.params ? navData.route.params : {}
+
     return {
-        headerTitle: navData.navigation.getParam("productId") ? "Edit Product" : "Add Product",
-        headerRight:
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item
-                    title="Save"
-                    iconName={Platform.OS === "android" ? "md-checkmark" : "ios-checkmark"}
-                    onPress={onSubmit}
-                />
-            </HeaderButtons>
+        headerTitle: navParams.productId ? "Edit Product" : "Add Product",
     }
 }
 
@@ -189,7 +193,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     centered: {
-        flex :1,
+        flex: 1,
         alignItems: "center",
         justifyContent: "center"
     }

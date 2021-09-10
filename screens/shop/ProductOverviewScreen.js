@@ -18,54 +18,56 @@ const ProductOverviewScreen = props => {
     const loadData = useCallback(async () => {
         setError(null)
         setIsRefreshing(true)
-        try{
+        try {
             await dispatch(productsActions.fetchProducts())
-        } catch ( err ) {
+        } catch (err) {
             setError(err.message)
         }
         setIsRefreshing(false)
-    },[dispatch])
+    }, [dispatch])
 
-    useEffect(() => {
-        const willFocus = props.navigation.addListener("willFocus", loadData)
-        return () => {
-            willFocus.remove()
-        }
-    })
 
     useEffect(() => {
         setIsLoading(true)
         loadData().then(() => setIsLoading(false))
-    },[dispatch])
+    }, [dispatch])
+
+    useEffect(() => {
+        const unsubscribe = props.navigation.addListener(
+            "focus",
+            loadData
+        )
+        return () => {
+            unsubscribe()
+        }
+    })
 
     const onSelectHander = (id, title) => {
-        props.navigation.navigate({
-            routeName: "ProductDetail",
-            params: {
-                productId: id,
-                productTitle: title
-            }
-        })
+        props.navigation.navigate("ProductDetail", {
+            productId: id,
+            productTitle: title
+        },
+        )
     }
 
-    if (error){
+    if (error) {
         return (
             <View style={styles.centered}>
                 <Text>An error as occured.</Text>
-                <Button title="Try again ?" color={Colors.primary} onPress={loadData}/>
+                <Button title="Try again ?" color={Colors.primary} onPress={loadData} />
             </View>
         )
     }
 
-    if (isLoading){
+    if (isLoading) {
         return (
             <View style={styles.centered}>
-                <ActivityIndicator size="large" color={Colors.primary}/>
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         )
     }
 
-    if (!isLoading && products.length === 0){
+    if (!isLoading && products.length === 0) {
         return (
             <View style={styles.centered}>
                 <Text>No products to display. Start adding some !</Text>
@@ -117,10 +119,10 @@ const ProductOverviewScreen = props => {
     )
 }
 
-ProductOverviewScreen.navigationOptions = navData => {
+export const screenOptions = navData => {
     return {
         headerTitle: "All products",
-        headerLeft:
+        headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Menu"
@@ -130,8 +132,9 @@ ProductOverviewScreen.navigationOptions = navData => {
                             navData.navigation.toggleDrawer()
                         }}
                 />
-            </HeaderButtons>,
-        headerRight:
+            </HeaderButtons>
+        ),
+        headerRight: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
                 <Item
                     title="Cart"
@@ -142,6 +145,7 @@ ProductOverviewScreen.navigationOptions = navData => {
                         }}
                 />
             </HeaderButtons>
+        )
     }
 }
 
