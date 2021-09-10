@@ -1,9 +1,10 @@
 class CartItem {
-    constructor (quantity, title, price, sum) {
+    constructor (quantity, title, price, pushToken, sum) {
         this.quantity = quantity;
         this.title = title;
         this.price = price;
-        this.sum = sum
+        this.pushToken = pushToken
+        this.sum = sum;
     }
 }
 

@@ -53,5 +53,24 @@ export const addOrder = (cartItems, totalAmount) => {
         const respData = await response.json()
 
         dispatch({ type: ADD_ORDER, orderData: { id: respData.name, items: cartItems, totalAmount, date: date } })
+
+        for (const cartItem in cartItems) {
+            const pushToken = cartItem.pushToken
+
+            fetch("https://exp.host/--/api/v2/push/send", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Accept-Encoding": "gzip, deflate",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    to: pushToken,
+                    data: { extraData: "Some data" },
+                    title: "An order was placed",
+                    body: cartItem.title
+                })
+            })
+        }
     }
 }

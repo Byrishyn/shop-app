@@ -23,6 +23,7 @@ export const fetchProducts = () => {
                 loadedProducts.push(new Product(
                     key,
                     respData[key].ownerId,
+                    respData[key].ownerPushToken,
                     respData[key].title,
                     respData[key].imageUrl,
                     respData[key].description,
@@ -95,7 +96,8 @@ export const addProduct = (title, imageUrl, price, description) => {
                 imageUrl,
                 price,
                 description,
-                ownerId: userId
+                ownerId: userId,
+                pushToken: pushToken
             }
         });
     }
